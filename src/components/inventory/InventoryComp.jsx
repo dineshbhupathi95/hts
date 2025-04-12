@@ -30,13 +30,13 @@ const InventoryComp = () => {
   const [vendorForm] = Form.useForm();
 
   useEffect(() => {
-    axios.get(`${appConfig.pharmacyBaseURL}/api/vendors`).then((res) => setVendors(res.data));
-    axios.get(`${appConfig.pharmacyBaseURL}/medicines`).then((res) => setMedicines(res.data));
+    axios.get(`${appConfig.pharmacyBaseURL}/api/vendors/`).then((res) => setVendors(res.data));
+    axios.get(`${appConfig.pharmacyBaseURL}/medicines/`).then((res) => setMedicines(res.data));
     fetchOrders();
   }, []);
 
   const fetchOrders = async () => {
-    const res = await axios.get(`${appConfig.pharmacyBaseURL}/api/orders`);
+    const res = await axios.get(`${appConfig.pharmacyBaseURL}/api/orders/`);
     setOrders(res.data);
   };
 

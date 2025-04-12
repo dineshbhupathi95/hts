@@ -15,7 +15,7 @@ const MedicineSale = () => {
 
   const fetchMedicines = async () => {
     try {
-      const response = await axios.get(`${appConfig.pharmacyBaseURL}/medicines`);
+      const response = await axios.get(`${appConfig.pharmacyBaseURL}/medicines/`);
       setMedicines(response.data);
     } catch (error) {
       showToast('Failed to fetch medicines', 'error');
@@ -64,7 +64,7 @@ const MedicineSale = () => {
 
   const handleConfirmSale = async () => {
     try {
-      await axios.post(`${appConfig.pharmacyBaseURL}/sales`, { cart });
+      await axios.post(`${appConfig.pharmacyBaseURL}/sales/`, { cart });
       showToast('Sale confirmed successfully', 'success');
       setCart([]);
       setShowCart([]);

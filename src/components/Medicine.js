@@ -18,7 +18,7 @@ const MedicineTable = () => {
   const fetchMedicines = async () => {
     setLoading(true);
     try {
-      const response = await axios.get(`${appConfig.pharmacyBaseURL}/medicines`);
+      const response = await axios.get(`${appConfig.pharmacyBaseURL}/medicines/`);
       setMedicines(response.data);
     } catch (error) {
       message.error('Failed to fetch medicines');
@@ -38,7 +38,7 @@ const MedicineTable = () => {
         message.success('Medicine updated successfully');
       } else {
         // Create medicine
-        await axios.post(`${appConfig.pharmacyBaseURL}/medicines`, values);
+        await axios.post(`${appConfig.pharmacyBaseURL}/medicines/`, values);
         message.success('Medicine created successfully');
       }
       fetchMedicines();

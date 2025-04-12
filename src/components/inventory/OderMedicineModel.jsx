@@ -19,7 +19,7 @@ const OrderMedicineModal = ({ isOpen, onClose, onSubmit, existingOrder = null })
   // Load vendors when the modal is opened
   useEffect(() => {
     if (isOpen) {
-      axios.get(`${appConfig.pharmacyBaseURL}/api/vendors`).then((res) => {
+      axios.get(`${appConfig.pharmacyBaseURL}/api/vendors/`).then((res) => {
         setVendors(res.data);
       });
     }
