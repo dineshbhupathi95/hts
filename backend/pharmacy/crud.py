@@ -1,12 +1,12 @@
 import uuid
 from sqlalchemy.orm import Session
-from elasticsearch import Elasticsearch
+# from elasticsearch import Elasticsearch
 from models import *
 from schemas import *
 from datetime import datetime
 
 # Elasticsearch Setup
-es = Elasticsearch("http://localhost:9200")  # Ensure Elasticsearch is running
+# es = Elasticsearch("http://localhost:9200")  # Ensure Elasticsearch is running
 
 # Create Medicine (Save to SQLite3 & Elasticsearch)
 def create_medicine(db: Session, medicine: MedicineCreate) -> MedicineResponse:
@@ -19,19 +19,16 @@ def create_medicine(db: Session, medicine: MedicineCreate) -> MedicineResponse:
     db.refresh(db_medicine)
 
     # Save in Elasticsearch
-    es.index(index="medicines", id=medicine_id, document=medicine.dict())
+    # es.index(index="medicines", id=medicine_id, document=medicine.dict())
 
     return MedicineResponse(id=medicine_id, **medicine.dict())
 
 # Fetch Medicines from Elasticsearch
-def get_medicines():
+def get_medicines(db:Session):
     es_query = {"query": {"match_all": {}}}
-    results = es.search(index="medicines", body=es_query)
-
-    return [
-        MedicineResponse(id=hit["_id"], **hit["_source"])
-        for hit in results["hits"]["hits"]
-    ]
+    # results = es.search(index="medicines", body=es_query)
+    results = db.query(MedicineDB).all()
+    return results
 
 # Update Medicine (SQLite3 & Elasticsearch)
 def update_medicine(db: Session, medicine_id: str, medicine: MedicineUpdate):
@@ -48,7 +45,7 @@ def update_medicine(db: Session, medicine_id: str, medicine: MedicineUpdate):
     db.refresh(db_medicine)
 
     # Update in Elasticsearch
-    es.update(index="medicines", id=medicine_id, body={"doc": medicine.dict(exclude_unset=True)})
+    # es.update(index="medicines", id=medicine_id, body={"doc": medicine.dict(exclude_unset=True)})
 
     # ✅ Return a valid Pydantic Response
     return MedicineResponse(
@@ -71,7 +68,7 @@ def delete_medicine(db: Session, medicine_id: str):
     db.commit()
 
     # Delete from Elasticsearch
-    es.delete(index="medicines", id=medicine_id, ignore=[404])  # Ignore 404 errors if document not found
+    # es.delete(index="medicines", id=medicine_id, ignore=[404])  # Ignore 404 errors if document not found
 
     return True
 
@@ -93,17 +90,17 @@ def create_sale(db: Session, sale: SaleCreate):
         item_total_price = float(medicine.price * item.quantity)
         total_price += item_total_price
 
-        # Update Elasticsearch Medicine Index
-        es.update(
-            index="medicines",
-            id=str(item.medicine_id),
-            body={
-                "doc": {
-                    "quantity": medicine.quantity
-                }
-            }
-        )
-        print(f"✅ Updated Medicine Index: Medicine ID {item.medicine_id}, New Quantity: {medicine.quantity}")
+        # # Update Elasticsearch Medicine Index
+        # es.update(
+        #     index="medicines",
+        #     id=str(item.medicine_id),
+        #     body={
+        #         "doc": {
+        #             "quantity": medicine.quantity
+        #         }
+        #     }
+        # )
+        # print(f"✅ Updated Medicine Index: Medicine ID {item.medicine_id}, New Quantity: {medicine.quantity}")
 
         # Create Sale Record
         sale_record = Sale(
@@ -115,19 +112,19 @@ def create_sale(db: Session, sale: SaleCreate):
         )
         db.add(sale_record)
 
-        # Store Sale Record in Elasticsearch Sales Index
-        es.index(
-            index="sales",
-            id=str(sale_id),
-            body={
-                "id": str(sale_id),
-                "medicine_id": str(item.medicine_id),
-                "quantity": int(item.quantity),
-                "total_price": float(item_total_price),
-                "sale_date": sale_record.sale_date.isoformat()
-            }
-        )
-        print(f"✅ Sale Record Created in Elasticsearch: Sale ID {sale_id}")
+        # # Store Sale Record in Elasticsearch Sales Index
+        # es.index(
+        #     index="sales",
+        #     id=str(sale_id),
+        #     body={
+        #         "id": str(sale_id),
+        #         "medicine_id": str(item.medicine_id),
+        #         "quantity": int(item.quantity),
+        #         "total_price": float(item_total_price),
+        #         "sale_date": sale_record.sale_date.isoformat()
+        #     }
+        # )
+        # print(f"✅ Sale Record Created in Elasticsearch: Sale ID {sale_id}")
 
     db.commit()
 

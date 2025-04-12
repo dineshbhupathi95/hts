@@ -29,14 +29,14 @@ def api_create_medicine(medicine: MedicineCreate, db: Session = Depends(get_db))
 
 # API Endpoint: Fetch Medicines (from Elasticsearch)
 @app.get("/medicines/", response_model=list[MedicineResponse])
-def api_get_medicines():
-    return get_medicines()
+def api_get_medicines(db: Session = Depends(get_db)):
+    return get_medicines(db)
 
 # API Endpoint: Update Medicine
 @app.put("/medicines/{medicine_id}", response_model=MedicineResponse)
 def api_update_medicine(
-    medicine: MedicineUpdate,  # ✅ Required parameter first
-    medicine_id: str = Path(..., title="Medicine ID"),  # ✅ Default parameter after
+    medicine: MedicineUpdate,
+    medicine_id: str = Path(..., title="Medicine ID"),
     db: Session = Depends(get_db)
 ):
     updated_medicine = update_medicine(db, medicine_id, medicine)
