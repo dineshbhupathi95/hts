@@ -6,7 +6,7 @@ from crud import *
 from models import *
 from fastapi.middleware.cors import CORSMiddleware
 from sqlalchemy.orm import joinedload
-
+import uvicorn
 # Initialize FastAPI app
 app = FastAPI()
 
@@ -210,3 +210,7 @@ def delete_order(order_id: int, db: Session = Depends(get_db)):
     db.delete(order)
     db.commit()
     return {"message": "Order deleted successfully"}
+
+
+if __name__ == "__main__":
+    uvicorn.run(app, host="0.0.0.0", port=8000)
