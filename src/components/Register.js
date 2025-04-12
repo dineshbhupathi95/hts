@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Form, Input, Button, Card, Typography, Alert } from 'antd';
-
+import appConfig from '../ApiConfig';
 const { Title, Text } = Typography;
 
 function Register() {
@@ -21,7 +21,7 @@ function Register() {
     }
     
     try {
-      const response = await fetch('http://localhost:8000/users/', {
+      const response = await fetch(`${appConfig.userBaseURL}/users/`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(values)

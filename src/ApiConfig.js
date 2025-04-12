@@ -1,5 +1,5 @@
 const appConfig = {
-    userBaseURL: 'http://127.0.0.1:8000',
-    pharmacyBaseURL: 'http://127.0.0.1:8001'
+    userBaseURL: 'https://hts-p2ct.onrender.com',
+    pharmacyBaseURL: 'https://pharmadk.onrender.com'
 }
 export default appConfig;

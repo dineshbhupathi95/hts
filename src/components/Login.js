@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Form, Input, Button, Card, Typography, Alert } from 'antd';
-
+import appConfig from '../ApiConfig';
 const { Title, Text } = Typography;
 
 function Login({ onLogin }) {
@@ -18,7 +18,7 @@ function Login({ onLogin }) {
       formData.append('username', values.username);
       formData.append('password', values.password);
       
-      const response = await fetch('http://localhost:8000/token', {
+      const response = await fetch(`${appConfig.userBaseURL}/token`, {
         method: 'POST',
         body: formData,
       });
@@ -29,7 +29,7 @@ function Login({ onLogin }) {
         throw new Error(data.detail || 'Login failed');
       }
       
-      const userResponse = await fetch('http://localhost:8000/users/me/', {
+      const userResponse = await fetch(`${appConfig.userBaseURL}/users/me/`, {
         headers: { 'Authorization': `Bearer ${data.access_token}` },
       });
       
