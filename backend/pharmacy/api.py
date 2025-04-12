@@ -72,7 +72,7 @@ def api_get_sales(db: Session = Depends(get_db)):
 # Inventory apis
 
 
-@app.get("/api/vendors", response_model=List[VendorOut])
+@app.get("/api/vendors/", response_model=List[VendorOut])
 def get_vendors(db: Session = Depends(get_db)):
     return db.query(Vendor).all()
 
